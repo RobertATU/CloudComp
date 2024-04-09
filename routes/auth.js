@@ -2,8 +2,10 @@ const Auth = (req, res, next) => {
     console.log(req.cookies.isLoggedIn)
     if (req.cookies.isLoggedIn === 'true') {
       next()
-    } else {
-      res.redirect('/')
+    } 
+    else{
+      console.log('failed to addAproduct: ' )
+      res.send({ success: false, message: 'Unsuccessful' })
     }
   }
   module.exports = Auth

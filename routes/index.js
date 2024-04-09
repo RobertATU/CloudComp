@@ -34,12 +34,14 @@ router.get('/addProduct', Auth, (req, res, next) => {
   let productId = 10
   const name = req.query.name
   const price = req.query.price
-  const ourId = req.query.ourId
+  Product.countDocuments({},(err, count) => {
+    
+  console.log(count)
   try {
     const prod = new Product({
       name: name,
       price: price,
-      ourId:ourId,
+      ourId:count + 1,
     })
     prod.save().then(() => {
       console.log('saved product to database')
@@ -49,6 +51,7 @@ router.get('/addProduct', Auth, (req, res, next) => {
     console.log('failed to addAproduct: ' + err)
     res.send({ success: false, message: 'Unsuccessful' })
   }
+})
 })
  
 
@@ -149,13 +152,15 @@ router.get('/signin', async (req, res, next) => {
  
 });
 
-const users = []
+
 router.get('/signup', (req, res, next) => {
   console.log(req.query.email)
   email = req.query.email.trim()
   password = req.query.pass.trim()
   password = bcrypt.hashSync(password + process.env.EXTRA_BCRYPT_STRING, 12)
-  new User({ email: req.query.email , password: password, cartId: 1 })
+  User.countDocuments({},(err, count) => {
+    console.log(count)
+  new User({ email: req.query.email , password: password, cartId: count + 1 })
     .save()
     .then(result => {
     
@@ -166,6 +171,7 @@ router.get('/signup', (req, res, next) => {
       console.log('failed to user: ' + err)
       res.redirect('/')
     })
+  })
 })
 
 router.get('/signout', (req, res, next) => {
